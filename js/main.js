@@ -526,15 +526,27 @@ function showNotification(message, type = 'info') {
     showEnhancedNotification(message, type, 5000);
 }
 
-// Mobile Menu
+// Enhanced Mobile Menu
 function setupMobileMenu() {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navMenu = document.querySelector('.nav-menu');
+    const body = document.body;
     
     if (mobileMenuBtn && navMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             navMenu.classList.toggle('active');
             mobileMenuBtn.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+        
+        // Close menu when clicking on menu items
+        navMenu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
         });
         
         // Close menu when clicking outside
@@ -542,6 +554,25 @@ function setupMobileMenu() {
             if (!mobileMenuBtn.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
                 mobileMenuBtn.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+        });
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                body.classList.remove('menu-open');
             }
         });
     }
